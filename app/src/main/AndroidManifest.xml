@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".FozeiArtworkActivity" />
+        <activity android:name=".FozeiArtworkActivity"
+            android:theme="@android:style/Theme.Holo"/>
 
         <service android:name=".FozeiArtworkService">
             <intent-filter>

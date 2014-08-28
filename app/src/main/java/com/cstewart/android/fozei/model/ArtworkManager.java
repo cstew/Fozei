@@ -1,4 +1,4 @@
-package com.cstewart.android.fozei;
+package com.cstewart.android.fozei.model;
 
 import com.cstewart.android.fozei.model.ArtSource;
 import com.cstewart.android.fozei.model.SourceState;

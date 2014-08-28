@@ -3,6 +3,8 @@ package com.cstewart.android.fozei;
 import android.app.Application;
 import android.content.Context;
 
+import com.cstewart.android.fozei.model.ArtworkManager;
+
 import javax.inject.Singleton;
 
 import dagger.Module;

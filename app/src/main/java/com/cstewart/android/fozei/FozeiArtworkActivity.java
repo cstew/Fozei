@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import com.cstewart.android.fozei.base.FozeiActivity;
 import com.cstewart.android.fozei.model.ArtSource;
 import com.cstewart.android.fozei.model.Artwork;
+import com.cstewart.android.fozei.model.ArtworkManager;
+import com.cstewart.android.fozei.model.Constants;
 import com.cstewart.android.fozei.model.SourceState;
 import com.squareup.picasso.Picasso;
 
@@ -19,17 +21,8 @@ import de.greenrobot.event.EventBus;
 
 public class FozeiArtworkActivity extends FozeiActivity {
 
-    public static final String ACTION_HANDLE_COMMAND = "com.google.android.apps.muzei.api.action.HANDLE_COMMAND";
-    public static final String EXTRA_COMMAND_ID = "com.google.android.apps.muzei.api.extra.COMMAND_ID";
-    public static final String EXTRA_SCHEDULED = "com.google.android.apps.muzei.api.extra.SCHEDULED";
-
-    private static final String URI_SCHEME_COMMAND = "muzeicommand";
-
-    private static final int FIRST_BUILTIN_COMMAND_ID = 1000;
-
-    public static final int BUILTIN_COMMAND_ID_NEXT_ARTWORK = FIRST_BUILTIN_COMMAND_ID + 1;
-
-    @Inject ArtworkManager mArtworkManager;
+    @Inject
+    ArtworkManager mArtworkManager;
     @Inject EventBus mEventBus;
 
     private ImageView mImageView;
@@ -42,6 +35,7 @@ public class FozeiArtworkActivity extends FozeiActivity {
         setContentView(R.layout.activity_fozei_artwork);
 
         mArtSource = mArtworkManager.getArtSource();
+        setTitle(mArtSource.getLabel());
 
         mImageView = (ImageView) findViewById(R.id.activity_fozei_artwork_image);
         updateImage();
@@ -51,6 +45,12 @@ public class FozeiArtworkActivity extends FozeiActivity {
     protected void onStart() {
         super.onStart();
         mEventBus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mEventBus.unregister(this);
     }
 
     @Override
@@ -70,24 +70,17 @@ public class FozeiArtworkActivity extends FozeiActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mEventBus.unregister(this);
-    }
-
     public void onEventMainThread(SourceState sourceState) {
         updateImage();
     }
 
     private void nextImage() {
-        // Go to next
-        Intent nextImageIntent = new Intent(ACTION_HANDLE_COMMAND)
+        Intent nextImageIntent = new Intent(Constants.ACTION_HANDLE_COMMAND)
                 .setComponent(mArtSource.getComponentName())
-                .setData(Uri.fromParts(URI_SCHEME_COMMAND,
-                        Integer.toString(BUILTIN_COMMAND_ID_NEXT_ARTWORK), null))
-                .putExtra(EXTRA_COMMAND_ID, BUILTIN_COMMAND_ID_NEXT_ARTWORK)
-                .putExtra(EXTRA_SCHEDULED, true);
+                .setData(Uri.fromParts(Constants.URI_SCHEME_COMMAND,
+                        Integer.toString(Constants.BUILTIN_COMMAND_ID_NEXT_ARTWORK), null))
+                .putExtra(Constants.EXTRA_COMMAND_ID, Constants.BUILTIN_COMMAND_ID_NEXT_ARTWORK)
+                .putExtra(Constants.EXTRA_SCHEDULED, true);
         startService(nextImageIntent);
     }
 

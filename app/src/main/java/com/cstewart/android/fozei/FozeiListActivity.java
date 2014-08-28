@@ -18,9 +18,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cstewart.android.fozei.base.FozeiActivity;
 import com.cstewart.android.fozei.model.ArtSource;
+import com.cstewart.android.fozei.model.ArtworkManager;
 import com.cstewart.android.fozei.model.Constants;
 
 import java.util.ArrayList;
@@ -35,7 +37,8 @@ import javax.inject.Inject;
 public class FozeiListActivity extends FozeiActivity {
     private static final String TAG = FozeiListActivity.class.getSimpleName();
 
-    @Inject ArtworkManager mArtworkManager;
+    @Inject
+    ArtworkManager mArtworkManager;
 
     private ListView mArtSourceListView;
 
@@ -167,7 +170,13 @@ public class FozeiListActivity extends FozeiActivity {
     private void startSettings(ArtSource artSource) {
         Intent settingsIntent = new Intent();
         settingsIntent.setComponent(artSource.getSettingsComponent());
-        startActivity(settingsIntent);
+
+        try {
+            startActivity(settingsIntent);
+        } catch (SecurityException exception) {
+            Log.e(TAG, "Unable to start activity", exception);
+            Toast.makeText(this, "Unable to start activity: " + exception, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void subscribe(ArtSource artSource) {

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.cstewart.android.fozei.model.ArtworkManager;
 import com.cstewart.android.fozei.model.Constants;
 import com.cstewart.android.fozei.model.SourceState;
 
@@ -15,7 +16,8 @@ import de.greenrobot.event.EventBus;
 public class FozeiArtworkService extends IntentService {
     private static final String TAG = FozeiArtworkService.class.getSimpleName();
 
-    @Inject ArtworkManager mArtworkManager;
+    @Inject
+    ArtworkManager mArtworkManager;
     @Inject EventBus mEventBus;
 
     public FozeiArtworkService() {
